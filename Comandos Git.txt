@@ -43,5 +43,19 @@ checkout: se utilizar para cambiarse a la rama recientemente creado, o para move
 -u: lo que haces es decirle al repo de github que vamos a tener una rama local linkeada a una rama en el repo.
 	git push -u origin primeraRama
 
+branch -a: muestra todas las ramas locales y remotas
+	git branch -a
 
+merged: merge sería hacer la union de la rama o branch con la master o proyect principal.
 
+--merged: vemos todos los merged hasta el momento.
+	git branch --merged
+
+merge: hacemos un merge de nuestra rama contra la master o main
+	git merge primeraRama 
+
+--delete: borrar una branch del repositorio
+	git push origin --delete primeraRama
+
+-d: para borrar la branch de manera local.
+	git branch -d primeraRama
