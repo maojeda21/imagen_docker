@@ -65,7 +65,7 @@ Primero pasos
 	git pull origin main/master 		--> Verificamos que tengamos los archivos actualizados.
 	git branch otra_rama 				--> Creamos una nueva rama o branch.
 	git checkout otra rama 				--> Pasamos a esa rama creada.
-	Modificaciones --> Se realiza los cambios correspondientes en la rama creada.
+	Modificaciones 						--> Se realiza los cambios correspondientes en la rama creada.
 	git add -A 							--> Agregamos al staying los archivos o cambios.
 	git commit -m "agregando archivos"	--> Hacemos el commit.
 	git push origin otra_rama			--> Actualizamos la rama recien modificada
@@ -74,6 +74,3 @@ Primero pasos
 	git merge otra_rama					--> mergeamos la rama, o sea, hacemos que se realicen los cambios de la rama en la master.
 	git push origin main/master			--> Ahora subimos nuetra master/main al repositorio con los cambios de nuestra rama en la master.
 	
-
-
-
