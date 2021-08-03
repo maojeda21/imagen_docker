@@ -12,4 +12,17 @@ add: para agregar los nuevos archivos al versionamiento de Git.
 -A: con este parametro agregamso todos los archivos al versionamiento.
 	git add -A 
 
+rm: con este comando ingnoramos algunos cambios hechos antes de hacer el commit.
+	git rm --cached .gitignore
 
+commit: agregar un comentario y pasar los archivos del estado de staying al repositorio
+	git commit -m "agregando archivos"
+
+log: permite ver el historial de todos los commits del repositorio
+	git log
+
+clone: clona un repositorio externo a tu PC para poder empezar a usarlo.
+	git clone URL del repo
+
+diff: muestra las diferencias entre los commit.
+	git diff
