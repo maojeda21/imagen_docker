@@ -1,0 +1,231 @@
+Mostrar contenedores
+    docker ps / ps -a
+    -Con el parametro -l nos permite ver el ultimo contenedor creado.
+    docker ps -l
+    -Con el parametro -q podemos ver los IDs de los contenedores que estan funcionando.
+    docker ps -q 
+    -Con el parametros -aq podemos ver los IDs de los contendores que NO estan funcionando.
+    docker ps -aq
+
+cat /etc/lsb-release: para saber la version de ubuntu por consola.
+
+-e: con este parametro le pasamos variables de enterno al contendor al momento de crear.
+
+-i: para ingresar al contenedor previamente creado, en modo interactivo.
+    docker start -i ubuntu1
+
+Ctrl+P+Q: para salir del contendor sin detenerlo
+
+cat /etc/hosts: COMANDO PARA SABER LAS IPS Y LAS REDES a la que pertenece un determinado contendor en linux
+
+--rm: con este parametro ejecutamos un contenedor y luego lo borra.
+    docker run -it --rm ubuntu
+
+Eliminar contenedores
+    docker m (numero de id o nombre)
+
+Borrar imagenes
+    docker rmi (id/nombre)
+    docker image rm (id:tag/nombre:tag)
+    -Se puede poner el parametro -f pàra forsar el borrado
+    docker rmi -f id/nombre
+
+Con el parametro --name podemos asigar un nombre a un contenedor.
+    docker run -it --name mi_primer_contenedor_con_nombre_propio (imagen del contenedor)
+
+Exec: me permite mandar o ejecutar una determinada orden sobre un contenedor que se esta ejecutando.
+    docker run -it ubuntu (para correr un contenedor)
+    docker exec ubuntu ls /
+    -Podemos lanzar varios comandos de una sola vez
+    docker exec ubuntu date ; uname -n
+    -Podemos ingresar al contenedor mediante el comando bash
+    docker exec -it ubuntu bash
+
+Logs: para ver los log de cada conetenedor
+    docker logs (contenedor)
+    docker logs (contenedor) --tail 5 (muestra las ultimas 5 lineas del logs de ese contendor)
+    docker logs (contenedor) -f (muestra y actualiza los logs todo el tiempo)
+
+Kill: para marar un contendor
+    docker kill (id/nombre)
+
+TOP: permite ver el consumo interno del contenedor
+    docker top (id/nombre del contendor)
+
+Stats: permite ver información del contenedor en cuestion.
+    docker stats (id/nombre del contenedor)
+
+Inspect: nos permite ver informacion a nivel de propiedades, de configuración
+    docker inspect (id del contenedor)
+    -Podemos aplicar lo mismo a las imagenes
+    docker inspect (id de la imagen)
+
+-- RED en docker --
+
+Ver informacion de la red en docker
+    docker network
+    docker network ls  
+
+-P este parametro hace que todos los puertos dentro del contenedor sean publicos, es la opcion mas facil para publicar puertos pero la menos segura.
+    docker run -d -P nginx
+
+-p(numero de puerto):80 (mi puerto:puerto del contenedor) con este parametro indicamos con que numero de puerto queremos ingresar al contenedor, es mas seguro, dado que habilitamos un puerto en especifico.
+    docker run -d -p 3000 nginx
+
+Inspect bridge: nos brinda informaicón sobre la red bridge
+    docker network inspect bridge
+
+Port: con este parametro podemos ver el puerto por donde escucha un determinado contenedor.
+    docker port (id/nombre del contenedor)
+ 
+Network create:: crea una nueva red para los contenedores.
+    docker network create (nombre de la red)
+    docker network ls
+    b95eb1b3fdab   bridge    bridge    local
+    3603f256f6a8   host      host      local
+    a2b2cb5f374e   none      null      local
+    a9c365f56a57   red1      bridge    local <-- la red nueva que se acaba de crear
+
+--subnet: crea una red nueva con un rango de ip especifico
+    docker network create --subnet=192.168.0.0/16 (nombre de la red)
+
+--network: creamos un contenedor y asignamos a una red determinada.
+    docker run -ir --name ubuntu1 --network red1 ubuntu
+
+Connect: conecta un contenedor a una red en espedifico y se puede hacer en caliente, va agregando redes, no es que la saca, sino que forma parte de dos redes ese contenedor
+    docker network connect (red a la que quiero conectar) (id/nombre del contenedor al que quiero conectar)
+
+Disconnect: desconecta de una red un determinado conector
+    docker network disconnect (la red que quiero desconectar) (id/nombre del contenedor al que quiero desconectar)
+
+--ip-range: asocia un rango de Ip que los contenedores pueden tomar.
+    docker network create net2 --subnet=172.30.0.0/16 --ip-range=172.30.10.0/24 
+
+--link:(nombre del contenedor al cual quiero conectar): con este comando podemos crear un enlace con un determinado contenedor en la red y tambien darle un alias
+    docker run -it --rm --name b3 --link b1:maquina1 busybox
+
+-- VOLUMENES --
+
+-v: con este parametro creamos un volumen dentro del contenedor, donde se guardaría dicha informaicón.
+    docker run -it --name ubuntu1 -v /datos (donde /datos es el directorio donde se crea y guarda los datos del volumen del contenedor)
+
+Ls: muestra informamcíon de los volumentes disponibles.
+    docker volume ls
+
+volumes-front: compartir el volumen de un contenedor ya creado con el que se esta por crear.
+    docker -it --name ubuntu1 -v /Datos ubuntu
+    docker -it --name ubuntu2 --volumes-from ubuntu1 ubuntu (ambos contenedores compartiran el mismo volumen)
+
+create: crea un volumen independiente.
+    docker volume create vol1
+    docker -it --name ubuntu1 -v vol1:/dir1 (asigno el "vol1" como el volumen del contenedor que estoy creando, y dentro del contenedor se va a ver en /dir1)
+
+ro: Read Only, para que el contenedor que vaya a usar ese volumen tenga permiso de solo lectura.
+    docker -it --name ubuntu2 - vol1/dir1:ro ubuntu bash
+
+Prune: eliminar volumenes que no se estan usando
+    docker volume prune
+
+-- IMAGENES --
+
+diff: comando que sirve para ver los cambios que ha tenido un determinado contenedor.
+    docker diff ubuntu1
+
+commit: crea una imagen nueva, apartir de otra imagen ya creada, admite tags, commit (imagen base) (imagen a crear):tag
+    docker commit ubuntu mi_ubuntu
+
+-t: para asignar un nombre a una imagen al momento de crearlo con Dockerfile
+
+Build: crear imagenes apartir de un Dokerfile
+    docker build -t im-ubuntu-net . (el punto "." indica el mismo directorio, o sea, el dockerfile esta en el mismo)
+
+CMD: para agregar comandos al momento de correr el dockerfile.
+    FROM ubuntu
+    RUN apt update
+    RUN apt install net-tools && apt install -y iputils-ping
+    CMD ["/bin/bash"] y otra forma es CMD /bin/bash -> la forma mas recomendables es la primera, en formato JSON.
+
+ENTRYPONT: al igual que el CMD lo que hace es ejecutar algo al momento de ejecutar el contendor, la diferencia es que este comando blinda(ejecutar siempre) el comando.
+    FROM ubuntu
+    RUN apt update
+    RUN apt install net-tools && apt install -y iputils-ping
+    ENTRYPONT ["/bin/bash"] o  ENTRYPONT ["df"]
+
+WORKDIR: un directorio de trabajo, se van a ejecutar todos los comandos en ese directorio, se pueden agregar mas de un WORKDIR.
+    FROM ubuntu
+    RUN apt update
+    RUN apt install net-tools && apt install -y iputils-ping
+    RUN mkdir /Datos
+    WORKDIR /Datos
+    ENTRYPONT ["/bin/bash"]
+
+COPY: copia contendido del host fisico al contenedor
+    COPY index.html . (el punto hace referencia al estacio de trabajo (WORKDIR))
+    COPY app.log /Datos
+
+ADD: hace lo mismo que COPY.
+
+ENV: para poner variables de entorno dentro del contenedor, se puede usar -e o --env.
+    docker run -it --name ubuntu1 --env x=10 ubuntu
+    FROM ubuntu
+    RUN apt update
+    RUN apt install net-tools && apt install -y iputils-ping
+    RUN mkdir /Datos
+    WORKDIR /Datos
+    ENV dir=/data dir2=/data2
+    RUN mkdir $dir && $ mkdir $dir2
+    ENTRYPONT ["/bin/bash"]
+
+ARG: sirve para poner variables dentro del contenedor al momento de contruir el contendor, pero con una variable dentro, --build-arg
+    ENV dir=/data dir2=/data2
+    RUN mkdir $dir && $ mkdir $dir2
+    -------------------------------
+    ARG dir2
+    RUN madir $dir2
+    docker build -it --name ubuntu1 --build-arg dir2=/data2 .
+
+EXPOSE: permite exponer puertos
+    RUN apt update
+    RUN apt install net-tools && apt install -y iputils-ping
+    RUN mkdir /Datos
+    WORKDIR /Datos
+    RUN touch f1.txt
+    COPY index.html .
+    COPY app.log /Datos
+    ADD entrypoint.sh .
+    RUN apt install -y apache2
+    EXPOSE 80
+
+VOLUME: crea un volumen en el Dockerfile
+    VOLUME ["var/www/html"]
+
+Dokcerfile del ejemplo practico
+    ##Descargamos una versión concreta de UBUNTU, a través del tag
+    FROM ubuntu:12.04
+    MAINTAINER Apasoft Formacion "apasoft.formacion@gmail.com"
+    ##Actualizamos el sistema
+    RUN apt-get update
+    ##Instalamos nginx
+    RUN apt-get install -y nginx
+    ##Creamos un fichero index.html en el directorio por defecto de nginx
+    RUN echo 'Mi primer Dockerfile' > /usr/share/nginx/www/index.html
+    ##Arrancamos NGINX a través de ENTRYPOINT para que no pueda ser ##modificar en la creación del contenedor
+    ENTRYPOINT ["/usr/sbin/nginx", "-g", "daemon off;"]
+    ##Exponemos el Puerto 80
+    EXPOSE 80
+
+login: loguearse en docker hub
+    doker login usuario
+
+Image tag: para crear una imagen que vamos a subir al repositorio personal pero de manera publica en docker hub.
+    docker image tag ubuntu1:v1 maojeda21/ubuntu:v1 / docker image tag (imagen local) (imagen en el repositorio)
+
+push: una vez creado la imagne con un push empujamos al repositorio personal correspondiente.
+    docker push maojeda21/ubuntu:v1
+
+-- DOCKER COMPOSE --
+Se realiza mediantes archivos .yml, los cuales serían los Dockerfiles del compose, se escribe el archivo y luego se ejcuta con un "up"
+
+up: levanta el o los contenedores (micro servicios) que es escribió en el archivo .yml.
+    docker-compose up 
+
