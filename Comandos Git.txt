@@ -26,3 +26,19 @@ clone: clona un repositorio externo a tu PC para poder empezar a usarlo.
 
 diff: muestra las diferencias entre los commit.
 	git diff
+
+push: subir los cambios al repo.
+	git push origin master
+
+pull: descargamos la ultima version que esta en el repositorio.
+	git pull origin master
+
+branch: crear una "rama" diferente a la principal (master) para poder empezar a trabajar en el proyecto, luego unirlo a la master.
+	git branch (nombre de la rama)
+	git branch (tambien se usa para ver las branch o ramas disponibles en el directorio local)
+
+checkout: se utilizar para cambiarse a la rama recientemente creado, o para moverse entra las diferentes ramas o a la master.
+	git branch primeraRama
+
+
+
