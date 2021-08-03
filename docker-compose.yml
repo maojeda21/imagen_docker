@@ -1,0 +1,10 @@
+version: 20.10.7
+service:
+    web:
+        build: .
+        ports: 
+        - "5000:5000"
+        volumes:
+        - .:/code
+        - logbolume01:_
+

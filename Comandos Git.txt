@@ -1,0 +1,15 @@
+init: el primer comando para hacer que cualquier proyecto sea versionado o controlado por git
+	git init (en la carpeta del proyecto)
+
+.gitignore: los contenidos en esta carpeta seran ignorados por el push de Git.
+
+status: podemos ver el estado de nuestros archivos.
+	git status
+
+add: para agregar los nuevos archivos al versionamiento de Git.
+	git add comandos.txt
+
+-A: con este parametro agregamso todos los archivos al versionamiento.
+	git add -A 
+
+
